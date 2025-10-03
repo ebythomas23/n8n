@@ -1,0 +1,136 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "details",
+        "formDescription": "TESTing the workflow",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "name ",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "email",
+              "fieldType": "email",
+              "placeholder": "abc@gmail.com",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "mobile",
+              "fieldType": "number",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        -128,
+        16
+      ],
+      "id": "2c918cea-e5db-49a4-b27b-ca352cfea1b3",
+      "name": "On form submission",
+      "webhookId": "c72106ff-56c6-4076-981c-24696cc43e7d"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.email }}",
+        "subject": "Thanks you for submitting form",
+        "message": "=Hello {{ $json['name '] }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        416,
+        16
+      ],
+      "id": "33490116-1ad9-4d05-8b4d-7b99e40919c7",
+      "name": "Send a message",
+      "webhookId": "3e2fcc7b-4c62-4bfa-81d6-4d0b212d66ca",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "yRrxjQqOMpHWLbdE",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Draft a  welcoming greeting mail to the user saying thank you for submitting the details. use the following information.\nname : {{ $json['name '] }}\nemail : {{ $json.email }}\nmobile : {{ $json.mobile }}\nsubmitted at {{ $json.submittedAt }}\n\n\nsign off from \nEby \nDATA scientist \nUnimelb"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        80,
+        16
+      ],
+      "id": "e90fb25f-cd8a-4c52-89cd-98cf27f11fd3",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "PjBHBhp14nuRmdeo",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        []
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "2caffa95-a851-4821-bf8c-2c0781989f2a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c6495194c767ce50b3558514ae7325655db379338f80fc60f65c892ee35432df"
+  },
+  "id": "mi1KtC85YQJ6B9E0",
+  "tags": []
+}
